@@ -3,7 +3,8 @@
 namespace App;
 
 
-class Discussion extends Model
+
+class Channel extends Model
 {
     //
 }
