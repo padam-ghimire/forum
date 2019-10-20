@@ -31,6 +31,16 @@
                     <button type="submit" class="btn btn-success">Create Discussion</button>
                 </form>
             </div>
+            @if($errors->any())
+                @foreach ($errors->any() as $error)
+                 {{$error}}   
+                @endforeach
+            @endif
+            @if(esssion('success'))
+            
+             {{session('success')}}   
+          
+        @endif
         </div>
     </div>
 @endsection

@@ -71,29 +71,39 @@
                 </div>
             </div>
         </nav>
-
-        @auth
-        <main class="py-4 container">
-            <div class="row">
-                <div class="col-md-4">
-                <ul class="list-group">
-                        @foreach ($channels as $channel)
-                        <li class="list-group-item">
-                            {{$channel->name}}
-                        </li>
-                        @endforeach
-                    </ul>
-                </div>
-                    <div class="col-md-8">
-                       @yield('content')
+        @if(!in_array(request()->path(),['login','register','email','password/reset']))
+            <main class="py-4 container">
+                <div class="row">
+                    <div class="col-md-4">
+                    @auth
+                      <a href="{{ route('discussions.create')}}" style="width:100%; color:white;"class="btn btn-info my-2">Add Discussion</a>
+                    @else
+                        <a href="{{ route('login')}}" style="width:100%; color:white;"class="btn btn-info my-2">Sign In To add Discussion</a>
+                    @endauth
+                    <div class="card card-default">
+                        <div class="card-header">
+                            Channels
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group">
+                                @foreach ($channels as $channel)
+                                <li class="list-group-item">
+                                    {{$channel->name}}
+                                </li>
+                                @endforeach
+                            </ul>
+                        </div>
                     </div>
-                </div>
-        </main>    
+                    </div>
+                        <div class="col-md-8">
+                           @yield('content')
+                        </div>
+                    </div>
+        </main> 
         @else
-        <main class="py-4">
             @yield('content')
-        </main>
-        @endauth
+        @endif
+
     </div>
     <script src="{{ asset('js/app.js') }}"></script>
     @yield('js')

@@ -1,18 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Discussion;
+
 use Illuminate\Http\Request;
-use App\Http\Requests\CreateDiscussionRequest;
-use Illuminate\Support\Str;
+use App\Http\Requests\CreateReplyRequest;
+use App\Discussion;
 
-
-
-class DiscussionsController extends Controller
+class RepliesController extends Controller
 {
-    public function __construcy(){
-        $this->middleware(['auth'])->only(['store','create']);
-    }
     /**
      * Display a listing of the resource.
      *
@@ -20,9 +15,7 @@ class DiscussionsController extends Controller
      */
     public function index()
     {
-        return view('discussions.index',[
-            'discussions' =>Discussion::paginate(5)
-        ]);
+        //
     }
 
     /**
@@ -32,7 +25,7 @@ class DiscussionsController extends Controller
      */
     public function create()
     {
-        return view('discussions.create');
+        //
     }
 
     /**
@@ -41,16 +34,15 @@ class DiscussionsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateDiscussionRequest $request)
+    public function store(CreateReplyRequest $request, Discussion $discussion)
     {
-        auth()->user()->discussions()->create([
-            'title' => $request->title,
+        auth()->user()->replies()->create([
+          
+            'discussion_id' => $discussion->id,
             'content' =>$request->content,
-            'slug' => Str::slug($request->title),
-            'channel_id' => $request->channel
         ]);
-        session()->flash('success','Discussion created successfully.');
-        return redirect(route('discussions.index'));
+        session()->flash('success','Reply Added successfully.');
+        return redirect(route('discussions.show',$discussion->slug));
     }
 
     /**
@@ -59,13 +51,9 @@ class DiscussionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Discussion $discussion)
+    public function show($id)
     {
-        // dd($discussion);
-
-        return view('discussions.show',[
-            'discussion' => $discussion
-        ]);
+        //
     }
 
     /**
