@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 use App\Discussion;
+use App\Reply;
 use Illuminate\Http\Request;
 use App\Http\Requests\CreateDiscussionRequest;
 use Illuminate\Support\Str;
+use App\Notifications\ReplyMarkedAsBestreply;
+
 
 
 
 class DiscussionsController extends Controller
 {
-    public function __construcy(){
-        $this->middleware(['auth'])->only(['store','create']);
+    public function __construct(){
+        $this->middleware(['auth','verified'])->only(['store','create']);
     }
     /**
      * Display a listing of the resource.
@@ -21,7 +24,7 @@ class DiscussionsController extends Controller
     public function index()
     {
         return view('discussions.index',[
-            'discussions' =>Discussion::paginate(5)
+            'discussions' =>Discussion::filterByChannels()->paginate(5)
         ]);
     }
 
@@ -100,5 +103,12 @@ class DiscussionsController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function reply(Discussion $discussion,Reply $reply){
+
+        $discussion->markAsBestReply($reply);
+        session()->flash('success','Marked as Best reply');
+        return redirect()->back();
+
     }
 }

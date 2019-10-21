@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\CreateReplyRequest;
 use App\Discussion;
+use App\Notifications\NewReplyAdded;
 
 class RepliesController extends Controller
 {
@@ -41,7 +42,15 @@ class RepliesController extends Controller
             'discussion_id' => $discussion->id,
             'content' =>$request->content,
         ]);
+        if( $discussion->author->id != auth()->user()->id){
+
+            $discussion->user->notify(new NewReplyAdded($discussion));
+        }
+
+        // $discussion->user->notify(new NewReplyAdded($discussion));
+
         session()->flash('success','Reply Added successfully.');
+       
         return redirect(route('discussions.show',$discussion->slug));
     }
 
